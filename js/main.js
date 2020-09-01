@@ -68,7 +68,7 @@ Block.prototype.squarePrint = function(color) {
     contex.fillRect(x,y,blockSize,blockSize);
 };
 
-
+// draw an apple
 var circle = function (x,y,r) {
     contex.beginPath();
     contex.arc(x,y,r,0,Math.PI *2, false);
@@ -84,3 +84,66 @@ Block.prototype.circlePrint = function (color) {
 
 var cir = new Block(4,30);
 cir.circlePrint("Red")
+
+//if the snake's head and the apple are in the same place//
+
+Block.prototype.compare = function (block) {
+    return ((this.column === block.column) && (this.row === block.row));
+}
+
+// var apple = new Block(2,3);
+// var head = new Block (2,3)
+// console.log(head.compare(apple))
+
+var snake = function () {
+    this.section = [
+        new Block(8,4),
+        new Block(7,4),
+        new Block(6,4),
+    ];
+    this.direction = "right";
+    this.nextDirection = "right";
+};
+
+snake.prototype.draw = function() {
+    for (let i=0; i< this.section.length; i++) {
+        this.section[i].squarePrint("Green");
+    }
+};
+
+let snaked = new snake();
+snaked.draw();
+
+snake.prototype.move = function() {
+    var head = this.section[0];
+    var newHead;
+
+    this.direction = this.nextDirection;
+
+    if (this.direction === "right") {
+        newHead = new Block(head.column + 1, head.row);
+    } else if (this.direction === "down") {
+        newHead = new Block(head.column, head.row + 1);
+    } else if (this.direction === "left") {
+        newHead = new Block(head.column - 1, head.row);
+    } else if (this.direction === "up") {
+        newHead = new Block(head.column, head.row - 1);
+    }
+
+    if(this.headCollision(newHead)){
+        gameOver();
+        return;
+    }
+
+    this.section.unshift(newHead);
+
+    if (newHead.compare(apple.position)) {
+        result++;
+        apple.move();
+    } else {
+        this.section.pop();
+    }
+};
+
+    
+
