@@ -1,28 +1,31 @@
 
+//canvas
+
 let canvas = document.getElementById("canvas");
 let contex = canvas.getContext("2d");
 // contex.fillRect(0,0,10,10);
+// making canvas width and height
 let width = canvas.width;
 let height = canvas.height;
+//net size
 let blockSize = 10;
 let blockWidth = width / blockSize;
 let blockHeigth = height / blockSize;
+
 let result = 0;
-
-
 
 
 let time = setInterval(function () {
     contex.clearRect(0,0,width,height);
     printResult();
     snake.move();
-    snake.print();
-    apple.print();
+    snake.draw();
+    apple.draw();
     printBorder();
 }, 100);
 
 
-
+// Drawing border
 const printBorder = function (){
     contex.fillStyle = "Gray";
     contex.fillRect(0,0,width,blockSize);
@@ -30,10 +33,6 @@ const printBorder = function (){
     contex.fillRect(0,0,blockSize,width);
     contex.fillRect(width-blockSize,0,blockSize,height);
 };
-printBorder()
-
-
-
 
 const printResult = function() {
     contex.font = "14px Comic Sans MS";
@@ -42,8 +41,6 @@ const printResult = function() {
     contex.textAlign = "left";
     contex.fillText("Result: " + result,blockSize,blockSize);
     };
-
-printResult()
 
 const gameOver = function() {
     clearInterval(time);
@@ -54,13 +51,12 @@ const gameOver = function() {
     contex.fillText("Game Over", 200, 200);
 };
 
-gameOver();
-
+// Block
 const Block = function (column, row) {
     this.column = column;
     this.row = row;
 }
-
+//drawing square in bloks place 
 Block.prototype.squarePrint = function(color) {
     let x = this.column * blockSize;
     let y = this.row * blockSize;
@@ -68,7 +64,7 @@ Block.prototype.squarePrint = function(color) {
     contex.fillRect(x,y,blockSize,blockSize);
 };
 
-// draw an apple
+// drawing circle in bloks place 
 var circle = function (x,y,r) {
     contex.beginPath();
     contex.arc(x,y,r,0,Math.PI *2, false);
@@ -82,8 +78,8 @@ Block.prototype.circlePrint = function (color) {
     circle(cx,cy,blockSize/2, true);
 };
 
-var cir = new Block(4,30);
-cir.circlePrint("Red")
+// var cir = new Block(4,30);
+// cir.circlePrint("Red")
 
 //if the snake's head and the apple are in the same place//
 
@@ -95,7 +91,9 @@ Block.prototype.compare = function (block) {
 // var head = new Block (2,3)
 // console.log(head.compare(apple))
 
-var snake = function () {
+
+//snake 
+var Snake = function () {
     this.section = [
         new Block(8,4),
         new Block(7,4),
@@ -105,16 +103,19 @@ var snake = function () {
     this.nextDirection = "right";
 };
 
-snake.prototype.draw = function() {
+//each of the snakes part draw by square 
+Snake.prototype.draw = function() {
     for (let i=0; i< this.section.length; i++) {
         this.section[i].squarePrint("Green");
     }
 };
 
-let snaked = new snake();
-snaked.draw();
+let snake= new Snake();
+snake.draw();
 
-snake.prototype.move = function() {
+
+// make a new head of snake and put it in front of snake 
+Snake.prototype.move = function() {
     var head = this.section[0];
     var newHead;
 
@@ -145,5 +146,71 @@ snake.prototype.move = function() {
     }
 };
 
+//collision - game over
+Snake.prototype.headCollision = function(head) {
+    let leftCollision = (head.column === 0);
+    let rightCollision = (head.column === blockWidth -1);
+    let upCollision = (head.row === 0);
+    let downCollision = (head.row === blockHeigth -1);
+    let wallCollision = leftCollision || rightCollision || upCollision || downCollision;
     
+    let tailCollision = false;
+    for (let i=0; i<this.section.length; i++) {
+        if (head.compare(this.section[i])) {
+            tailCollision = true;
+        }
+    }
+    return wallCollision || tailCollision;
+}
+
+//key operation
+let directions = {
+    37: "left",
+    38: "up",
+    39: "right",
+    40: "down"
+}
+
+$("body").keydown(function (press) {
+    let newDirection = directions[press.keyCode];
+    if (newDirection !== undefined) {
+        snake.setDirection(newDirection);
+    }
+});
+
+Snake.prototype.setDirection = function (newDirection) {
+    if (this.direction === "up" && newDirection === "down") {
+        return;
+    } else if (this.direction === "down" && newDirection === "up") {
+        return;
+    } else if (this.direction === "left" && newDirection === "right") {
+        return;
+    } else if (this.direction === "right" && newDirection === "left") {
+        return;
+    };
+
+this.nextDirection = newDirection;
+};
+
+//Apple
+var Apple = function () {
+    this.position = new Block(10,10);
+};
+
+Apple.prototype.draw = function() {
+    this.position.circlePrint("Red");
+};
+
+var apple = new Apple();
+apple.draw();
+
+//move an apple in mew random place
+Apple.prototype.move = function () {
+    let randomColumn = Math.floor (Math.random() * (blockWidth -2)) + 1;
+    let randomRow = Math.floor(Math.random() * (blockHeigth - 2)) + 1;
+    this.position = new Block (randomColumn, randomRow); 
+};
+
+
+
 
