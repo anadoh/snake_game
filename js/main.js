@@ -98,9 +98,11 @@ var Snake = function () {
 
 //each of the snakes part draw by square 
 Snake.prototype.draw = function() {
-    for (var i=0; i< this.section.length; i++) {
-        this.section[i].squarePrint("Green");
-    }
+    this.section[0].squarePrint("Yellow");
+    for (var i=1; i< this.section.length; i++) {
+        var color = i%2 === 0 ? "Green": "Blue";
+        this.section[i].squarePrint(color);  
+    };
 };
 
 var snake= new Snake();
@@ -201,6 +203,7 @@ apple.draw();
 Apple.prototype.move = function () {
     var randomColumn = Math.floor (Math.random() * (blockWidth -2)) + 1;
     var randomRow = Math.floor(Math.random() * (blockHeigth - 2)) + 1;
+    
     this.position = new Block (randomColumn, randomRow); 
 };
 
