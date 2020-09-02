@@ -3,7 +3,7 @@
 
 let canvas = document.getElementById("canvas");
 let contex = canvas.getContext("2d");
-// contex.fillRect(0,0,10,10);
+
 // making canvas width and height
 let width = canvas.width;
 let height = canvas.height;
@@ -78,19 +78,10 @@ Block.prototype.circlePrint = function (color) {
     circle(cx,cy,blockSize/2, true);
 };
 
-// var cir = new Block(4,30);
-// cir.circlePrint("Red")
-
 //if the snake's head and the apple are in the same place//
-
 Block.prototype.compare = function (block) {
     return ((this.column === block.column) && (this.row === block.row));
 }
-
-// var apple = new Block(2,3);
-// var head = new Block (2,3)
-// console.log(head.compare(apple))
-
 
 //snake 
 var Snake = function () {
