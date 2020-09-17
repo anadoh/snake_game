@@ -36,7 +36,7 @@ var printBorder = function (){
 };
 
 var printResult = function() {
-    contex.font = "14px Comic Sans MS";
+    contex.font = "14px Arial Black";
     contex.textBaseline = "top";
     contex.fillStyle = "Black";
     contex.textAlign = "left";
@@ -45,11 +45,17 @@ var printResult = function() {
 
 var gameOver = function() {
     clearInterval(time);
-    contex.font = "60px Comic Sans MS";
+    contex.font = "60px Arial Black";
     contex.textBaseline = "middle";
     contex.fillStyle = "Black";
     contex.textAlign = "center";
+    contex.shadowBlur = 6;
+    contex.shadowColor = "Red"
     contex.fillText("Game Over", 200, 200);
+};
+
+var changeBackground = function() {
+    document.querySelector(".container").classList.add('game-over');
 };
 
 // Block
@@ -100,7 +106,7 @@ var Snake = function () {
 Snake.prototype.draw = function() {
     this.section[0].squarePrint("Yellow");
     for (var i=1; i< this.section.length; i++) {
-        var color = i%2 === 0 ? "Green": "Blue";
+        var color = i%2 === 0 ? "Brown": "Blue";
         this.section[i].squarePrint(color);  
     };
 };
@@ -128,6 +134,7 @@ Snake.prototype.move = function() {
 
     if(this.headCollision(newHead)){
         gameOver();
+        changeBackground();
         return;
     }
 
