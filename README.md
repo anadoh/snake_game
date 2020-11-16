@@ -3,7 +3,8 @@
 ## General Info
 
 The classic Snake Game is a project developed using JavaScript, CSS, HTML canvas.
-
+## To play the game click:
+https://anadoh.github.io/snake_game/
 
 ## Technologies
 * HTML 
